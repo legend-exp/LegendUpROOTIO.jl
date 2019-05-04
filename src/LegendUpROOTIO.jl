@@ -4,11 +4,13 @@ __precompile__(true)
 
 module LegendUpROOTIO
 
+using ArgCheck
 using ArraysOfArrays
 using ElasticArrays
 using LegendDataTypes
 using RadiationDetectorSignals
 using StaticArrays
+using StructArrays
 using Tables
 using Unitful
 using UpROOT
@@ -20,6 +22,10 @@ using LegendDataTypes: readdata, writedata, getunits, setunits!, units_from_stri
 
 using RadiationDetectorSignals: RealQuantity, ArrayOfDims, AosAOfDims, SArrayOfDims,
     recursive_ndims
+
+using UpROOT: ROOTIOBuffer, ROOTClassHeader, ROOTClassVersion, TObjectContent, TNamedContent,
+    TClonesArrayHeader, kByteCountMask
+
 
 include("mgdo.jl")
 
