@@ -11,6 +11,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 TypedTables = "9d95f2ec-7b3d-5a63-8d20-e2491e220bb9"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+UpROOT = "69ce31c6-c38d-56c2-aa87-409d3de9f997"
 
 [compat]
 julia = ">= 1.1"

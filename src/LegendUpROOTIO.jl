@@ -11,6 +11,7 @@ using RadiationDetectorSignals
 using StaticArrays
 using Tables
 using Unitful
+using UpROOT
 
 import HDF5
 import TypedTables
@@ -20,6 +21,6 @@ using LegendDataTypes: readdata, writedata, getunits, setunits!, units_from_stri
 using RadiationDetectorSignals: RealQuantity, ArrayOfDims, AosAOfDims, SArrayOfDims,
     recursive_ndims
 
-# package code goes here
+include("mgdo.jl")
 
 end # module
