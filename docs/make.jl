@@ -12,7 +12,7 @@ makedocs(
     modules = [LegendUpROOTIO],
     format = Documenter.HTML(
         prettyurls = !("local" in ARGS),
-        canonical = "https://legend-exp.github.io/ShapesOfVariables.jl/stable/"
+        canonical = "https://legend-exp.github.io/LegendUpROOTIO.jl/stable/"
     ),
     pages=[
         "Home" => "index.md",
