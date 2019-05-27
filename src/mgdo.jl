@@ -38,7 +38,15 @@ function read_mgtclonesarray_header(io::ROOTIOBuffer)
 end
 
 
-@inline function read_vl_int(io::IO, T::Type{<:Unsigned})
+function _read_wfsamples_noenc(io::ROOTIOBuffer, T::Type{<:Real}, n::Int)
+    samples = Vector{T}(undef, n)
+    read!(io.buffer, samples)
+    samples .= ntoh.(samples)
+    samples
+end
+
+
+@inline function _read_vl_int(io::IO, T::Type{<:Unsigned})
     maxPos = 8 * sizeof(T)
     x::T = 0
     pos::Int = 0
@@ -54,21 +62,9 @@ end
     end
 end
 
+@inline _read_vl_int(io::IO, T::Type{<:Signed}) = _zigzagdec(_read_vl_int(io, unsigned(T)))
 
-@inline read_vl_int(io::IO, T::Type{<:Signed}) = zigzagdec(read_vl_int(io, unsigned(T)))
-
-
-@inline zigzagdec(x::Unsigned) = signed(xor((x >>> 1), (-(x & 1))))
-
-
-
-function _read_wfsamples_noenc(io::ROOTIOBuffer, T::Type{<:Real}, n::Int)
-    samples = Vector{T}(undef, n)
-    read!(io.buffer, samples)
-    samples .= ntoh.(samples)
-    samples
-end
-
+@inline _zigzagdec(x::Unsigned) = signed(xor((x >>> 1), (-(x & 1))))
 
 function _read_wfsamples_diffvarint(io::ROOTIOBuffer, T::Type{<:Real}, n::Int)
     T = Int32
@@ -76,7 +72,7 @@ function _read_wfsamples_diffvarint(io::ROOTIOBuffer, T::Type{<:Real}, n::Int)
     x::T = 0
     samples = Vector{T}(undef, n)
     for i in eachindex(samples)
-        x = read_vl_int(buf, T) + x
+        x = _read_vl_int(buf, T) + x
         samples[i] = x
     end
     samples
