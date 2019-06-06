@@ -94,7 +94,7 @@ function _read_wfsamples(io::ROOTIOBuffer, enc::EWFEncScheme, n::Integer)
 end
 
 
-function read_MGTWaveform(io::ROOTIOBuffer, time_units::Unitful.Units)
+function read_MGTWaveform(io::ROOTIOBuffer)
     MGTWaveform_ver = read(io, ROOTClassVersion)
     @assert MGTWaveform_ver.version == 5
     mgtdataobject = read(io, MGTDataObjectContent)
@@ -110,9 +110,12 @@ function read_MGTWaveform(io::ROOTIOBuffer, time_units::Unitful.Units)
     unknown_byte = read(io, UInt8)
     @assert unknown_byte == 0x01
 
-    dt = uconvert(time_units, inv(fSampFreq))
-    t0 = uconvert(time_units, fTOffset)
-    t = t0 .+ (0:(size(fData,1) - 1)) .* dt
+    time_units = u"ns"
+
+    dt = Int32(uconvert(time_units, inv(fSampFreq)) / time_units) * time_units
+    t0 = Int32(uconvert(time_units, fTOffset) / time_units) * time_units
+    t_idxs = Int32(0):Int32(size(fData,1) - 1)
+    t = t0 .+ t_idxs .* dt
 
     (
         ch = fID,
@@ -121,19 +124,19 @@ function read_MGTWaveform(io::ROOTIOBuffer, time_units::Unitful.Units)
 end
 
 
-function read_tca_MGTWaveform(io::ROOTIOBuffer, time_units::Unitful.Units)
+function read_tca_MGTWaveform(io::ROOTIOBuffer)
     read_mgtclonesarray_header(io)
     tcahdr = read(io, TClonesArrayHeader)
     @assert tcahdr.fName == "MGTWaveforms"
     @assert tcahdr.fClass == "MGTWaveform;5"
 
-    wfdata_1 = read_MGTWaveform(io, time_units)
+    wfdata_1 = read_MGTWaveform(io)
     ch = [wfdata_1.ch]
     wf_v = VectorOfVectors([wfdata_1.wf.v])
     wf_t = StructArray([wfdata_1.wf.t])
 
     for i in 2:tcahdr.nobjects
-        wfdata = read_MGTWaveform(io, time_units)
+        wfdata = read_MGTWaveform(io)
         push!(ch, wfdata.ch)
         push!(wf_v, wfdata.wf.v)
         push!(wf_t, wfdata.wf.t)
@@ -286,7 +289,7 @@ function read_mgtevent(io::ROOTIOBuffer)
     fETotal = read(io, Float64)
     fTime = read(io, Float64)
 
-    fWaveforms = read_tca_MGTWaveform(io, u"μs")
+    fWaveforms = read_tca_MGTWaveform(io)
 
     fDigitizerData = read_tca_MGTVDigitizerData(io)
 
@@ -301,7 +304,7 @@ function read_mgtevent(io::ROOTIOBuffer)
     fUseAuxWaveformArray = read(io, Bool)
 
 
-    fAuxWaveforms = read_tca_MGTWaveform(io, u"μs")
+    fAuxWaveforms = read_tca_MGTWaveform(io)
 
     fEventNumber = read(io, Int32)
 
