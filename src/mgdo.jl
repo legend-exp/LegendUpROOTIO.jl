@@ -119,7 +119,7 @@ function read_MGTWaveform(io::ROOTIOBuffer)
 
     (
         ch = fID,
-        wf = RDWaveform(fData, t),
+        wf = RDWaveform(t, fData),
     )
 end
 
@@ -132,19 +132,19 @@ function read_tca_MGTWaveform(io::ROOTIOBuffer)
 
     wfdata_1 = read_MGTWaveform(io)
     ch = [wfdata_1.ch]
-    wf_v = VectorOfVectors([wfdata_1.wf.v])
-    wf_t = StructArray([wfdata_1.wf.t])
+    wf_t = StructArray([wfdata_1.wf.time])
+    wf_v = VectorOfVectors([wfdata_1.wf.value])
 
     for i in 2:tcahdr.nobjects
         wfdata = read_MGTWaveform(io)
         push!(ch, wfdata.ch)
-        push!(wf_v, wfdata.wf.v)
-        push!(wf_t, wfdata.wf.t)
+        push!(wf_t, wfdata.wf.time)
+        push!(wf_v, wfdata.wf.value)
     end
 
     TypedTables.Table(
         ch = ch,
-        wf = StructArray{RDWaveform}((wf_v, wf_t))
+        wf = StructArray{RDWaveform}((wf_t, wf_v))
     )
 end
 
