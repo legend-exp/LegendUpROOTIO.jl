@@ -367,10 +367,10 @@ function mgdo2legend(::Val{:GETGERDADigitizerData}, x::TypedTables.Table)
         daqevtno = x.fEventNumber, # Meaning?
         # ignore = x.fPretrigger, # use in waveform
         trigno = x.fTriggerNumber, # Meaning?
-        muveto = x.fIsMuVetoed,
+        muveto = BitArray(x.fIsMuVetoed),
         muveto_sample = x.fMuVetoSample, # Meaning?
         decimal_timestamp = x.fDecimalTimeStamp, # Meaning?
-        inverted = x.fIsInverted, # 
+        inverted = BitArray(x.fIsInverted), # 
         #flags = mgdo2legend.(x.fWaveformTag),
     )
 end
