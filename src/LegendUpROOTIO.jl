@@ -1,7 +1,5 @@
 # This file is a part of LegendUpROOTIO.jl, licensed under the MIT License (MIT).
 
-__precompile__(true)
-
 module LegendUpROOTIO
 
 using ArgCheck
@@ -15,7 +13,6 @@ using Tables
 using Unitful
 using UpROOT
 
-import HDF5
 import TypedTables
 
 using LegendDataTypes: readdata, writedata, getunits, setunits!, units_from_string, units_to_string
