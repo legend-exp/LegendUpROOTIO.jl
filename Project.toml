@@ -17,7 +17,7 @@ UpROOT = "69ce31c6-c38d-56c2-aa87-409d3de9f997"
 
 [compat]
 ArgCheck = "1, 2"
-ArraysOfArrays = "0.5"
+ArraysOfArrays = "0.5, 0.6"
 ElasticArrays = "1"
 LegendDataTypes = "0.1"
 RadiationDetectorSignals = "0.1, 0.2"
